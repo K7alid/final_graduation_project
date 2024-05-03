@@ -119,3 +119,7 @@ def process_images():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     process_images()
+
+# ngrok
+#ngrok config add-authtoken 2fkEPj0AZkMbZ9fgakiE858QZ9d_5cNRFSbT5VYRFsbT9x5Ms
+#ngrok http 5000
