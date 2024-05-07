@@ -1,3 +1,10 @@
+# this is the code for the replicate api with flask server and using api with body
+# this is the code for the replicate api with flask server and using api with body
+# this is the code for the replicate api with flask server and using api with body
+# this is the code for the replicate api with flask server and using api with body
+# this is the code for the replicate api with flask server and using api with body
+
+
 from flask import Flask, request, jsonify
 import replicate
 import os
@@ -5,10 +12,10 @@ import os
 app = Flask(__name__)
 
 # Set up the Replicate API
-os.environ["REPLICATE_API_TOKEN"] = "r8_buLTfoRw7E7A32AIPDteMYnrmZZPVrk3KgkJb"
+os.environ["REPLICATE_API_TOKEN"] = "r8_5fAKRjEI8fBGOQEPeswasgDtsPZ7GM21L5Uic"
 api = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
 
-@app.route('/transform', methods=['POST'])
+@app.route('/', methods=['GET', "POST"])
 def transform():
     data = request.json
     garm_img = data.get('garm_img')

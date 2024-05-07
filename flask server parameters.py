@@ -1,3 +1,9 @@
+# this server code is not using the replicate api but using the gradio api and with parameters
+# this server code is not using the replicate api but using the gradio api and with parameters
+# this server code is not using the replicate api but using the gradio api and with parameters
+# this server code is not using the replicate api but using the gradio api and with parameters
+
+
 
 from gradio_client import Client, file
 from datetime import datetime
@@ -27,16 +33,16 @@ def download_image(url, path):
 
 
 
-def model_predict(user_picture_path, garment_image_path):
+def model_predict(human_img, garm_img):
     client = Client("yisol/IDM-VTON")
 
     result = client.predict(
         dict={
-            "background": file(user_picture_path),
+            "background": file(human_img),
             "layers": [],  # Make sure this is an empty list if no layers are used
             "composite": None  # Use None if no composite image is used
         },
-        garm_img=file(garment_image_path),
+        garm_img=file(garm_img),
         garment_des="Hello!!",  # Example garment description
         is_checked=True,  # Checkbox is checked
         is_checked_crop=False,  # Checkbox for crop is not checked
@@ -88,27 +94,23 @@ def upload_image(image_path):
 
 
 
-
-@app.route('/')
-def home():
-    return "Hello, World!"
-
-@app.route('/process_images', methods=['POST'])
+@app.route('/', methods=['GET', "POST"])
 def process_images():
-    data = request.get_json()
-    user_picture_url = data['user_picture_url']
-    garment_image_url = data['garment_image_url']
+    human_img = request.args.get('human_img')
+    garm_img = request.args.get('garm_img')
 
-    user_picture_path = download_image(user_picture_url, 'user_picture.jpg')
-    garment_image_path = download_image(garment_image_url, 'garment_picture.jpg')
+    if not human_img or not garm_img:
+        return jsonify({'error': 'Missing image URLs'}), 400
 
-    if not user_picture_path or not garment_image_path:
+    human_img = download_image(human_img, 'human_img.jpg')
+    garm_img = download_image(garm_img, 'garm_img.jpg')
+
+    if not human_img or not garm_img:
         return jsonify({'error': 'Failed to download images'}), 400
 
-    model_prediction = model_predict(user_picture_path, garment_image_path)
+    model_prediction = model_predict(human_img, garm_img)
     if not model_prediction:
         return jsonify({'error': 'Failed to process images'}), 500
-    # imgur_client_id = '582fe74c9292bda'
 
     uploaded_image_url = upload_image(model_prediction[0])
     if not uploaded_image_url:
@@ -119,7 +121,3 @@ def process_images():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
     process_images()
-
-# ngrok
-#ngrok config add-authtoken 2fkEPj0AZkMbZ9fgakiE858QZ9d_5cNRFSbT5VYRFsbT9x5Ms
-#ngrok http 5000

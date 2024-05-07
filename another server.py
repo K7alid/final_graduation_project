@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Set up the Replicate API
-api = replicate.Client(api_token='r8_buLTfoRw7E7A32AIPDteMYnrmZZPVrk3KgkJb')
+api = replicate.Client(api_token='r8_AuwRCDwCsFbXpGpyZtSbrYzauQ2Mkwh1xqWTY')
 
 @app.route('/transform', methods=['POST'])
 def transform():
@@ -32,3 +32,16 @@ def transform():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+
+# # A very simple Flask Hello World app for you to get started with...
+#
+# from flask import Flask
+#
+# app = Flask(__name__)
+#
+# @app.route('/')
+# def hello_world():
+#     return 'Hello from Flask!'
+#
