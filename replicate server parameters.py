@@ -18,8 +18,9 @@ def handle_request():
 
     human_img = str(request.args.get('human_img'))
     garm_img = str(request.args.get('garm_img'))
-    api = replicate.Client(api_token='r8_6UqgQALK1tyDpiRNhqOPgvEZPpKgmJS31Tf0R')#r8_SmCU44jUTz90Q21QuXlq9NWDuUtuqgk1IE3qY
-
+    api = replicate.Client(api_token='r8_8G73rzoXozjxS7of7yUTaXngl3bkdOf3NmgVs')
+    #r8_SmCU44jUTz90Q21QuXlq9NWDuUtuqgk1IE3qY
+    #r8_8G73rzoXozjxS7of7yUTaXngl3bkdOf3NmgVs
     input = {
         "garm_img": garm_img,
         "human_img": human_img,
@@ -32,10 +33,11 @@ def handle_request():
     )
     data_set = {"new_image_url": output}
     json_dump = json.dumps(data_set)
+    print(output)
     return json_dump
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
 
 # import replicate

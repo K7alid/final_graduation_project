@@ -13,6 +13,8 @@ app = Flask(__name__)
 
 # Set up the Replicate API
 os.environ["REPLICATE_API_TOKEN"] = "r8_5fAKRjEI8fBGOQEPeswasgDtsPZ7GM21L5Uic"
+#r8_SmCU44jUTz90Q21QuXlq9NWDuUtuqgk1IE3qY
+#r8_8G73rzoXozjxS7of7yUTaXngl3bkdOf3NmgVs
 api = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
 
 @app.route('/', methods=['GET', "POST"])

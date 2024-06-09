@@ -5,6 +5,8 @@
 
 #it's working alhamdullah
 
+
+
 from gradio_client import Client, file
 from datetime import datetime
 import cloudinary
@@ -18,20 +20,41 @@ import os
 
 app = Flask(__name__)
 
-def download_image(url, path):
+# def download_image(url, path):
+#     try:
+#         response = requests.get(url)
+#         if response.status_code == 200:
+#             with open(path, 'wb') as f:
+#                 f.write(response.content)
+#             return path
+#         else:
+#             return None
+#     except requests.RequestException as e:
+#         print(f"Error downloading image: {e}")
+#         return None
+
+
+
+from PIL import Image
+
+
+def download_image(url, path, size=(768, 1024)):
     try:
         response = requests.get(url)
         if response.status_code == 200:
             with open(path, 'wb') as f:
                 f.write(response.content)
+
+            with Image.open(path) as img:
+                resized_img = img.resize(size)
+                resized_img.save(path)
+
             return path
         else:
             return None
     except requests.RequestException as e:
         print(f"Error downloading image: {e}")
         return None
-
-
 
 def model_predict(human_img, garm_img):
     client = Client("yisol/IDM-VTON")
@@ -89,11 +112,26 @@ def upload_image(image_path):
     url, options = cloudinary_url(id, format='jpg')
 
     print(url)
+    url = url.replace("http://", "https://")
+    print(url)
     return url
 
 
 
+import shutil
 
+def move_file(src, dst):
+    """
+    Move a file from the source to destination
+
+    Parameters:
+    src (str): The source file path
+    dst (str): The destination file path
+
+    Returns:
+    None
+    """
+    shutil.move(src, dst)
 
 
 @app.route('/', methods=['GET', "POST"])
@@ -102,8 +140,11 @@ def process_images():
     human_img = data['human_img']
     garm_img = data['garm_img']
 
-    human_img = download_image(human_img, 'human_img.jpg')
-    garm_img = download_image(garm_img, 'garm_img.jpg')
+    id = datetime.now().isoformat().replace(':', '').replace('.', '').replace('-', '')
+    human_img = download_image(human_img, f'pictures/m_human_img_{id}.jpg')
+    garm_img = download_image(garm_img, f'pictures/m_garm_img_{id}.jpg')
+    # human_img = download_image(human_img, 'human_img.jpg')
+    # garm_img = download_image(garm_img, 'garm_img.jpg')
 
     if not human_img or not garm_img:
         return jsonify({'error': 'Failed to download images'}), 400
@@ -114,6 +155,8 @@ def process_images():
     # imgur_client_id = '582fe74c9292bda'
 
     uploaded_image_url = upload_image(model_prediction[0])
+    print(uploaded_image_url)
+    move_file(model_prediction[0], f'pictures/m_new_image_{id}.jpg')
     if not uploaded_image_url:
         return jsonify({'error': 'Failed to upload image to Imgur'}), 500
 
